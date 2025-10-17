@@ -1,0 +1,1 @@
+(sdml-ts-mode :repo "sdm-lang/emacs-sdml-ts-mode" :fetcher github)
