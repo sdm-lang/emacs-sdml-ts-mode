@@ -21,7 +21,7 @@ Install is easiest from MELPA, here's how with `use-package`.
   :vc (:url "https://github.com/sdm-lang/emacs-sdml-ts-mode"))
 ```
 
-Or, interactively; `M-x package-install RET sdml-mode RET`
+Or, interactively; `M-x package-install RET sdml-ts-mode RET`
 
 ## Usage
 
@@ -30,17 +30,18 @@ Once installed the major mode should be used for any file ending in `.sdm` or
 
 ## Ctags Support
 
-Using [Universal Ctags](https://ctags.io) and the [sdml-ctags](https://github.com/sdm-lang/sdml-ctags) package provides a tagging solution for
-SDML source. The `sdml-mode-ctags-mode` will determine if [`company-mode`](https://company-mode.github.io/) installed
-and add SDML as a supported tag backend. Additionally, this minor mode provides
-a command to re-create the project's tag file. The image below shows company
-used as the completion UI for type completion when editing.
+Using [Universal Ctags](https://ctags.io) and the [sdml-ctags](https://github.com/sdm-lang/sdml-ctags) package provides an identifier tagging
+solution for SDML source. The `sdml-ts-mode-ctags-mode` will determine if
+[`company-mode`](https://company-mode.github.io/) installed and add SDML as a supported tag backend. Additionally,
+this minor mode provides a command to re-create the project's tag file. The
+image below shows company used as the completion UI for type completion when
+editing.
 
 ![Completion](./images/emacs-completion.png)
 
-Command `sdml-mode-ctags-generate` has the default binding `C-c C-s T`. It uses the
-variables `sdml-mode-ctags-command` and `sdml-mode-ctags-output-file-name` to
-generate the tag file.
+Command `sdml-ts-mode-ctags-generate` has the default binding `C-c C-s T`. It uses
+the variables `sdml-ts-mode-ctags-command` and `sdml-ts-mode-ctags-output-file-name`
+to generate the tag file.
 
 ## Tool Commands
 
@@ -52,8 +53,8 @@ dependency tree and the validation tool.
 
 ### Dependency Tree
 
-* Command `sdml-mode-current-buffer-dependency-tree` has the default binding `C-c
-  C-s t`.
+* Command `sdml-ts-mode-current-buffer-dependency-tree` has the default binding
+  `C-c C-s t`.
 * The command will prompt for the maximum depth of the tree where 0 means
   unbounded. This is a command prefix and can therefore be specified with the
   usual `C-u` binding.
@@ -66,15 +67,16 @@ If running under a `window-sytem` it is also possible to display the current
 buffer's dependencies as a directed graph. The tool will generate an SVG and
 display in a read-only window.
 
-* Command `sdml-mode-current-buffer-dependency-graph` has the default binding `C-c
-  C-s M-t`.
+* Command `sdml-ts-mode-current-buffer-dependency-graph` has the default binding
+  `C-c C-s M-t`.
 
 ### Full Validation
 
-* Command `sdml-mode-validate-current-buffer` has the default binding `C-c C-s v`.
-* Command `sdml-mode-validate-file` has the default binding `C-c C-s M-v`.
-* The variable `sdml-mode-validation-level` denotes the level of messages produced
-  by the validator, with a default of `warnings`.
+* Command `sdml-ts-mode-validate-current-buffer` has the default binding `C-c C-s
+  v`.
+* Command `sdml-ts-mode-validate-file` has the default binding `C-c C-s M-v`.
+* The variable `sdml-ts-mode-validation-level` denotes the level of messages
+  produced by the validator, with a default of `warnings`.
 * The output uses the standard `compilation-mode` with all the common bindings are
   available.
 
