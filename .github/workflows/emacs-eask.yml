@@ -1,4 +1,4 @@
-name: Emacs Package CI (Eask)
+name: Emacs Eask
 
 on:
   push:
