@@ -1,7 +1,22 @@
 ;;; sdml-ts-mode-font-lock.el --- Internal font-lock support -*- lexical-binding: t; -*-
 
 ;; Author: Simon Johnston <johnstonskj@gmail.com>
-;; License: see sdml-ts-mode.el
+
+;;; License:
+
+;; Copyright (c) 2023, 2025 Simon Johnston
+;;
+;; Licensed under the Apache License, Version 2.0 (the "License");
+;; you may not use this file except in compliance with the License.
+;; You may obtain a copy of the License at
+;;
+;;     http://www.apache.org/licenses/LICENSE-2.0
+;;
+;; Unless required by applicable law or agreed to in writing, software
+;; distributed under the License is distributed on an "AS IS" BASIS,
+;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;; See the License for the specific language governing permissions and
+;; limitations under the License.
 
 ;;; Commentary:
 
@@ -26,12 +41,15 @@
   :group 'sdml-ts)
 
 (defface sdml-ts-warning-face
-  '((t (:inherit font-lock-warning-face :weight normal :slant italic)))
+  '((t
+     (:inherit font-lock-warning-face :weight normal :slant italic)))
   "Face used for syntax and other warnings."
   :group 'sdml-ts)
 
 (defface sdml-ts-error-face
-  '((t (:inherit font-lock-warning-face :underline (:style wave :position t))))
+  '((t
+     (:inherit font-lock-warning-face :underline
+	       (:style wave :position t))))
   "Face used for syntax and other errors."
   :group 'sdml-ts)
 
@@ -190,7 +208,8 @@
 ;; --------------------------------------------------------------------------
 
 (defface sdml-ts-annotation-property-face
-  '((t (:inherit font-lock-builtin-face :foreground "DarkGoldenrod4")))
+  '((t
+     (:inherit font-lock-builtin-face :foreground "DarkGoldenrod4")))
   "Face used for annotation property assertions in SDML."
   :group 'sdml-ts)
 
@@ -256,7 +275,8 @@
 ;; --------------------------------------------------------------------------
 
 (defface sdml-ts-separator-face
-  '((t (:inherit font-lock-delimiter-face :foreground "DarkSlateGray4")))
+  '((t
+     (:inherit font-lock-delimiter-face :foreground "DarkSlateGray4")))
   "Face used for separator characters and strings in the SDML grammar."
   :group 'sdml-ts)
 
@@ -338,15 +358,18 @@
 
    :feature 'binaries
    :language 'sdml
-   '((binary) @sdml-ts-binary-face)
+   '((binary)
+     @sdml-ts-binary-face)
 
    :feature 'booleans
    :language 'sdml
-   '((boolean) @sdml-ts-boolean-face)
+   '((boolean)
+     @sdml-ts-boolean-face)
 
    :feature 'iris
    :language 'sdml
-   '((iri) @sdml-ts-iri-face)
+   '((iri)
+     @sdml-ts-iri-face)
 
    :feature 'numbers
    :language 'sdml
@@ -354,55 +377,96 @@
       (decimal)
       (double)
       (integer)
-      (unsigned)]
+      (unsigned)
+      ]
      @sdml-ts-number-face)
 
    :feature 'strings
    :language 'sdml
-   '((quoted_string) @sdml-ts-string-face
-     (language_tag) @sdml-ts-string-face)
+   '((quoted_string)
+     @sdml-ts-string-face
+     (language_tag)
+     @sdml-ts-string-face)
 
    :feature 'annotations
    :language 'sdml
    '((annotation_property "@" @sdml-ts-annotation-property-face)
-     (annotation_property name: (identifier_reference) @sdml-ts-annotation-property-face))
+     (annotation_property name:
+			  (identifier_reference)
+			  @sdml-ts-annotation-property-face))
 
    :feature 'constraints
    :language 'sdml
    '((constraint "assert" @sdml-ts-keyword-face)
-     (constraint name: (identifier) @sdml-ts-annotation-constraint-face)
-     (informal_constraint value: (quoted_string) @sdml-ts-informal-constraint-face)
-     (informal_constraint language: (controlled_language_tag) @sdml-ts-informal-constraint-face))
+     (constraint name:
+		 (identifier)
+		 @sdml-ts-annotation-constraint-face)
+     (informal_constraint value:
+			  (quoted_string)
+			  @sdml-ts-informal-constraint-face)
+     (informal_constraint language:
+			  (controlled_language_tag)
+			  @sdml-ts-informal-constraint-face))
 
    :feature 'formals
    :language 'sdml
    '((sentence_with_environment [ "with" "for" ] @sdml-ts-keyword-face)
      (keyword_function_def "def" @sdml-ts-keyword-face)
-     (function_signature name: (identifier) @sdml-ts-function-def-face)
+     (function_signature name:
+			 (identifier)
+			 @sdml-ts-function-def-face)
      (function_signature target: (_) @sdml-ts-type-face)
      (function_parameter name: (identifier) @sdml-ts-field-face)
-     (function_type_reference (identifier_reference) @sdml-ts-type-face)
-     (cardinality_reference_expression (sequence_ordering) @sdml-ts-keyword-face)
-     (cardinality_reference_expression (sequence_uniqueness) @sdml-ts-keyword-face)
-     (atomic_sentence predicate: (term (identifier_reference) @sdml-ts-function-call-face))
-     (atomic_sentence argument: (term (identifier_reference) @sdml-ts-variable-face))
+     (function_type_reference
+      (identifier_reference)
+      @sdml-ts-type-face)
+     (cardinality_reference_expression
+      (sequence_ordering)
+      @sdml-ts-keyword-face)
+     (cardinality_reference_expression
+      (sequence_uniqueness)
+      @sdml-ts-keyword-face)
+     (atomic_sentence predicate:
+		      (term
+		       (identifier_reference)
+		       @sdml-ts-function-call-face))
+     (atomic_sentence argument:
+		      (term
+		       (identifier_reference)
+		       @sdml-ts-variable-face))
      (equation (term (identifier_reference) @sdml-ts-variable-face))
-     (inequation (term (identifier_reference) @sdml-ts-variable-face))
-     (set_expression_sentence (term (identifier_reference) @sdml-ts-variable-face))
-     (arithmetic_expression_sentence (term (identifier_reference) @sdml-ts-variable-face))
+     (inequation
+      (term (identifier_reference) @sdml-ts-variable-face))
+     (set_expression_sentence
+      (term (identifier_reference) @sdml-ts-variable-face))
+     (arithmetic_expression_sentence
+      (term (identifier_reference) @sdml-ts-variable-face))
      (quantified_variable
       (variable name: (identifier) @sdml-ts-variable-face)
-      ((set_op_is_member) @sdml-ts-operator-logical-face))
+      ((set_op_is_member)
+       @sdml-ts-operator-logical-face))
      ;; terms
-     (sequence_builder variable: (variable name: (identifier) @sdml-ts-variable-face))
+     (sequence_builder variable:
+		       (variable name:
+				 (identifier)
+				 @sdml-ts-variable-face))
      (functional_term
-      function: (term (identifier_reference) @sdml-ts-function-call-face))
+      function:
+      (term (identifier_reference) @sdml-ts-function-call-face))
      (functional_term
-      argument: (term (identifier_reference) @sdml-ts-variable-face))
-     (function_composition subject: (reserved_self) @sdml-ts-constant-builtin-face)
-     (function_composition subject: (reserved_event) @sdml-ts-constant-builtin-face) ;; TODO: scope this
-     (function_composition subject: (identifier) @sdml-ts-variable-face)
-     (function_composition name: (identifier) @sdml-ts-function-call-face)
+      argument:
+      (term (identifier_reference) @sdml-ts-variable-face))
+     (function_composition subject:
+			   (reserved_self)
+			   @sdml-ts-constant-builtin-face)
+     (function_composition subject:
+			   (reserved_event) @sdml-ts-constant-builtin-face) ;; TODO: scope this
+     (function_composition subject:
+			   (identifier)
+			   @sdml-ts-variable-face)
+     (function_composition name:
+			   (identifier)
+			   @sdml-ts-function-call-face)
      (term (reserved_self) @sdml-ts-constant-builtin-face)
      (term (reserved_event) @sdml-ts-constant-builtin-face)
      (reserved_event "event" @sdml-ts-constant-builtin-face))
@@ -411,8 +475,12 @@
    :language 'sdml
    '((module name: (identifier) @sdml-ts-module-def-face)
      (module_version "version" @sdml-ts-keyword-face)
-     (module_path_absolute segment: (identifier) @sdml-ts-module-face)
-     (module_path_relative segment: (identifier) @sdml-ts-module-face)
+     (module_path_absolute segment:
+			   (identifier)
+			   @sdml-ts-module-face)
+     (module_path_relative segment:
+			   (identifier)
+			   @sdml-ts-module-face)
      (member_import name: (qualified_identifier) @sdml-ts-type-face)
      (member_import rename: (identifier) @sdml-ts-type-face)
      (module_import name: (identifier) @sdml-ts-module-face)
@@ -430,18 +498,27 @@
       [ "maxExclusive" "maxInclusive" "minExclusive" "minInclusive" ]
       @sdml-ts-keyword-facet-face)
      (tz_restriction_facet "explicitTimezone"  @sdml-ts-keyword-facet-face)
-     (tz_restriction_facet (tz_restriction_value) @sdml-ts-constant-builtin-face)
+     (tz_restriction_facet
+      (tz_restriction_value)
+      @sdml-ts-constant-builtin-face)
      (pattern_restriction_facet "pattern" @sdml-ts-keyword-facet-face)
-     ((kw_is_fixed) @sdml-ts-keyword-face))
+     ((kw_is_fixed)
+      @sdml-ts-keyword-face))
 
    :feature 'definitions
    :language 'sdml
-   '((from_definition_clause from: (identifier_reference) @sdml-ts-type-face)
+   '((from_definition_clause from:
+			     (identifier_reference)
+			     @sdml-ts-type-face)
      (from_definition_with
       "with" @sdml-ts-keyword-face
-      member: (identifier) @sdml-ts-member-face)
+      member:
+      (identifier)
+      @sdml-ts-member-face)
      (datatype_def name: (identifier) @sdml-ts-type-def-face)
-     (datatype_base_type_reference (identifier_reference) @sdml-ts-type-face)
+     (datatype_base_type_reference
+      (identifier_reference)
+      @sdml-ts-type-face)
      (datatype_def opaque: (opaque) @sdml-ts-keyword-facet-face)
      (dimension_def name: (identifier) @sdml-ts-type-def-face)
      (entity_def name: (identifier) @sdml-ts-type-def-face)
@@ -449,12 +526,20 @@
      (event_def name: (identifier) @sdml-ts-type-def-face)
      (event_def name: (identifier) @sdml-ts-type-def-face)
      (event_def name: (identifier) @sdml-ts-type-def-face)
-     (function_signature name: (identifier) @sdml-ts-function-def-face)
+     (function_signature name:
+			 (identifier)
+			 @sdml-ts-function-def-face)
      (function_signature target: (_) @sdml-ts-type-face)
      (function_parameter name: (identifier) @sdml-ts-field-face)
-     (function_type_reference (identifier_reference) @sdml-ts-type-face)
-     (cardinality_reference_expression (sequence_ordering) @sdml-ts-keyword-face)
-     (cardinality_reference_expression (sequence_uniqueness) @sdml-ts-keyword-face)
+     (function_type_reference
+      (identifier_reference)
+      @sdml-ts-type-face)
+     (cardinality_reference_expression
+      (sequence_ordering)
+      @sdml-ts-keyword-face)
+     (cardinality_reference_expression
+      (sequence_uniqueness)
+      @sdml-ts-keyword-face)
      (metric_group_def name: (identifier) @sdml-ts-type-def-face)
      (metric_event_binding "on" @sdml-ts-keyword-face)
      (metric_event_binding (identifier_reference) @sdml-ts-type-face)
@@ -464,10 +549,13 @@
      (structure_def name: (identifier) @sdml-ts-type-def-face)
      (type_class_def name: (identifier) @sdml-ts-type-def-face)
      (type_parameter name: (identifier) @sdml-ts-type-def-face)
-     (type_parameter_restriction class: (identifier_reference) @sdml-ts-type-face)
+     (type_parameter_restriction class:
+				 (identifier_reference)
+				 @sdml-ts-type-face)
      (type_restriction_argument (identifier) @sdml-ts-type-face)
      (union_def name: (identifier) @sdml-ts-type-def-face)
-     (cardinality_reference_expression [(sequence_ordering) (sequence_uniqueness)] @sdml-ts-keyword-face))
+     (cardinality_reference_expression
+      [(sequence_ordering) (sequence_uniqueness)] @sdml-ts-keyword-face))
 
    :feature 'fields
    :language 'sdml
@@ -475,20 +563,31 @@
      (type_reference (identifier_reference) @sdml-ts-type-face)
      (annotation_member_def
       "@" @sdml-ts-annotation-property-def-face
-      (member_def name: (identifier) @sdml-ts-annotation-property-def-face))
+      (member_def name:
+		  (identifier)
+		  @sdml-ts-annotation-property-def-face))
      (property_ref "ref" @sdml-ts-keyword-face)
-     (property_ref property: (identifier_reference) @sdml-ts-field-face)
+     (property_ref property:
+		   (identifier_reference)
+		   @sdml-ts-field-face)
      (metric_ref "ref" @sdml-ts-keyword-face)
-     (metric_ref referent: (identifier_reference) @sdml-ts-field-face)
+     (metric_ref referent:
+		 (identifier_reference)
+		 @sdml-ts-field-face)
      (entity_identity "identity" @sdml-ts-keyword-face)
      (dimension_parent "parent" @sdml-ts-keyword-face)
      (dimension_parent name: (identifier) @sdml-ts-field-def-face)
-     (dimension_parent parent: (identifier_reference) @sdml-ts-type-face)
+     (dimension_parent parent:
+		       (identifier_reference)
+		       @sdml-ts-type-face)
      (source_entity "source" @sdml-ts-keyword-face)
-     (source_entity entity: (identifier_reference) @sdml-ts-type-face)
+     (source_entity entity:
+		    (identifier_reference)
+		    @sdml-ts-type-face)
      (source_entity "with" @sdml-ts-keyword-face)
      (source_entity member: (identifier) @sdml-ts-field-def-face)
-     (cardinality_expression [(sequence_ordering) (sequence_uniqueness)] @sdml-ts-keyword-face))
+     (cardinality_expression
+      [(sequence_ordering) (sequence_uniqueness)] @sdml-ts-keyword-face))
 
    :feature 'variants
    :language 'sdml
@@ -515,16 +614,24 @@
      (datatype_def [ "<-" "←" ] @sdml-ts-operator-type-face)
      (type_parameter [ "<-" "←" ] @sdml-ts-operator-type-face)
      (function_composition [ "." "∘" ] @sdml-ts-operator-function-face)
-     ((type_op_combiner) @sdml-ts-operator-type-face)
-     ([ (op_equality)
-        (inequality_relation) ]
+     ((type_op_combiner)
+      @sdml-ts-operator-type-face)
+     ([
+       (op_equality)
+       (inequality_relation)
+       ]
       @sdml-ts-operator-relational-face)
-     ([ (logical_connective)
-        (logical_quantifier) ]
+     ([
+       (logical_connective)
+       (logical_quantifier)
+       ]
       @sdml-ts-operator-logical-face)
-     ((logical_op_negation) @sdml-ts-operator-logical-negation-face)
-     ((set_operator) @sdml-ts-operator-set-face)
-     ((math_operator) @sdml-ts-operator-arithmetic-face)
+     ((logical_op_negation)
+      @sdml-ts-operator-logical-negation-face)
+     ((set_operator)
+      @sdml-ts-operator-set-face)
+     ((math_operator)
+      @sdml-ts-operator-arithmetic-face)
      (cardinality_range ".." @sdml-ts-operator-face))
 
    :feature 'sequences
@@ -540,14 +647,15 @@
 
    :feature 'parameters
    :language 'sdml
-   '((function_signature [ "(" ")" ] @sdml-ts-bracket-parameters-face)
-     (constraint_sentence [ "(" ")" ] @sdml-ts-bracket-parameters-face)
-     (atomic_sentence [ "(" ")" ] @sdml-ts-bracket-parameters-face)
-     (functional_term [ "(" ")" ] @sdml-ts-bracket-parameters-face)
-     (mapping_type [ "(" ")" ] @sdml-ts-bracket-parameters-face)
-     (type_class_def [ "(" ")" ] @sdml-ts-bracket-parameters-face)
-     (type_parameter_restriction [ "(" ")" ] @sdml-ts-bracket-parameters-face)
-     (value_constructor [ "(" ")" ] @sdml-ts-bracket-parameters-face))
+   '((function_signature ["(" ")" ] @sdml-ts-bracket-parameters-face)
+     (constraint_sentence ["(" ")" ] @sdml-ts-bracket-parameters-face)
+     (atomic_sentence ["(" ")" ] @sdml-ts-bracket-parameters-face)
+     (functional_term ["(" ")" ] @sdml-ts-bracket-parameters-face)
+     (mapping_type ["(" ")" ] @sdml-ts-bracket-parameters-face)
+     (type_class_def ["(" ")" ] @sdml-ts-bracket-parameters-face)
+     (type_parameter_restriction [
+				  "(" ")" ] @sdml-ts-bracket-parameters-face)
+     (value_constructor ["(" ")" ] @sdml-ts-bracket-parameters-face))
 
    :feature 'restrictions
    :language 'sdml
@@ -555,18 +663,21 @@
      (datatype_type_restrictions [ "{" "}" ] @sdml-ts-bracket-restriction-face)
      (sequence_of_predicate_values [ "{" "}" ] @sdml-ts-bracket-restriction-face)
      (cardinality_expression [ "{" "}" ] @sdml-ts-bracket-restriction-face)
-     (sequence_of_values [ "{" "}" ]) @sdml-ts-bracket-restriction-face)
+     (sequence_of_values [ "{" "}" ])
+     @sdml-ts-bracket-restriction-face)
 
    :feature 'delimiters
    :language 'sdml
    '((module_path_relative "::" @sdml-ts-separator-module-path-face)
      (module_path_absolute "::" @sdml-ts-separator-module-path-face)
      (quantified_sentence "," @sdml-ts-separator-qualified-sentence-face)
-     ((seq_builder_separator) @sdml-ts-separator-sequence-builder-face))
+     ((seq_builder_separator)
+      @sdml-ts-separator-sequence-builder-face))
 
    :feature 'error
    :language 'sdml
-   '((ERROR) @sdml-ts-error-face)))
+   '((ERROR)
+     @sdml-ts-error-face)))
 
 ;; --------------------------------------------------------------------------
 ;; Tree-Sitter ❱ Font Lock ❱ Features

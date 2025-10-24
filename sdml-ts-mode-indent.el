@@ -1,7 +1,22 @@
 ;;; sdml-ts-mode-indent.el --- Internal indent support -*- lexical-binding: t; -*-
 
 ;; Author: Simon Johnston <johnstonskj@gmail.com>
-;; License: see sdml-ts-mode.el
+
+;;; License:
+
+;; Copyright (c) 2023, 2025 Simon Johnston
+;;
+;; Licensed under the Apache License, Version 2.0 (the "License");
+;; you may not use this file except in compliance with the License.
+;; You may obtain a copy of the License at
+;;
+;;     http://www.apache.org/licenses/LICENSE-2.0
+;;
+;; Unless required by applicable law or agreed to in writing, software
+;; distributed under the License is distributed on an "AS IS" BASIS,
+;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;; See the License for the specific language governing permissions and
+;; limitations under the License.
 
 ;;; Commentary:
 
@@ -30,26 +45,28 @@
 ;; --------------------------------------------------------------------------
 
 (defconst sdml-ts-mode-indent--definition-nodes
-  (rx (or "datatype_def"
-          "dimension_def"
-          "entity_def"
-          "enum_def"
-          "event_def"
-          "property_def"
-          "rdf_def"
-          "structure_def"
-          "type_class_def"
-          "union_def")))
+  (rx
+   (or "datatype_def"
+       "dimension_def"
+       "entity_def"
+       "enum_def"
+       "event_def"
+       "property_def"
+       "rdf_def"
+       "structure_def"
+       "type_class_def"
+       "union_def")))
 
 (defconst sdml-ts-mode-indent--definition-body-nodes
-  (rx (or "annotation_only_body"
-                 "dimension_body"
-                 "entity_body"
-                 "enum_body"
-                 "event_body"
-                 "structure_body"
-                 "type_class_body"
-                 "union_body")))
+  (rx
+   (or "annotation_only_body"
+       "dimension_body"
+       "entity_body"
+       "enum_body"
+       "event_body"
+       "structure_body"
+       "type_class_body"
+       "union_body")))
 
 (sdml-ts-mode--dev-makunbound 'sdml-ts-mode-indent--rules)
 
@@ -89,13 +106,19 @@
 
       ;; --------------------------------------------------------------------
       ;; Modules and bodies.
-      ((match "module" "module_def") no-indent 0)
-      ((parent-is "module_version") parent-bol ,offset)
-      ((parent-is "module") parent-bol ,offset)
-      ((node-is "module") column-0 0)
+      ((match "module" "module_def")
+       no-indent 0)
+      ((parent-is "module_version")
+       parent-bol ,offset)
+      ((parent-is "module")
+       parent-bol ,offset)
+      ((node-is "module")
+       column-0 0)
 
-      ((parent-is "datatype_def") parent-bol ,offset)
-      ((parent-is "annotation_only_body") parent-bol ,offset)
+      ((parent-is "datatype_def")
+       parent-bol ,offset)
+      ((parent-is "annotation_only_body")
+       parent-bol ,offset)
 
       ;; ((match ,(rx (or "identifier" "iri" "quoted_string")) "module") parent-bol ,offset)
       ;; ((match ,(rx (or "import_statement")) "module_body") parent-bol ,offset)
@@ -172,8 +195,8 @@
   "Setup `treesit'-based indentation."
 
   (when sdml-ts-mode--dev-p
-      (message "%s" sdml-ts-mode-indent--rules)
-      (setq-local treesit--indent-verbose t))
+    (message "%s" sdml-ts-mode-indent--rules)
+    (setq-local treesit--indent-verbose t))
 
   ;; Turn off the old form
   (setq-local indent-tabs-mode nil)

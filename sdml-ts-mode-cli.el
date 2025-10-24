@@ -20,7 +20,7 @@
 
 ;;; Commentary:
 
-;; Internal module.
+;; Internal module for handling command-line invocations.
 
 ;;; Code:
 
@@ -40,12 +40,13 @@
 (defcustom sdml-ts-mode-cli-log-filter 'none
   "The level of log information to emit from the command line tool."
   :tag "Logging filter level"
-  :type '(choice (const :tag "None" none)
-                 (const :tag "Errors" errors)
-                 (const :tag "Warnings" warnings)
-                 (const :tag "Information" information)
-                 (const :tag "Debugging" debugging)
-                 (const :tag "Tracing" tracing))
+  :type '(choice
+	  (const :tag "None" none)
+	  (const :tag "Errors" errors)
+	  (const :tag "Warnings" warnings)
+	  (const :tag "Information" information)
+	  (const :tag "Debugging" debugging)
+	  (const :tag "Tracing" tracing))
   :group 'sdml)
 
 (defcustom sdml-ts-mode-cli-load-path nil
@@ -77,21 +78,24 @@
   (when (or t (derived-mode-p 'sdml-mode))
     (let* ((cli-name (or sdml-ts-mode-cli-name "sdml"))
            (cmd-name (executable-find cli-name))
-           (pre-args (list
-                      cmd-name
-                      (sdml-ts-mode-cli-make-arg 'log-filter sdml-ts-mode-cli-log-filter)
-                      (if sdml-ts-mode-cli-no-color "--no-color" nil)
-                      command))
-           (args (mapcar (lambda (arg) (cond
-                                   ((eq arg 'current-buffer)
-                                    (sdml-ts-mode-cli-make-arg 'input (buffer-file-name)))
-                                   (t arg)))
-                         args)))
+           (pre-args
+	    (list
+             cmd-name
+             (sdml-ts-mode-cli-make-arg 'log-filter sdml-ts-mode-cli-log-filter)
+             (if sdml-ts-mode-cli-no-color "--no-color" nil)
+             command))
+           (args
+	    (mapcar
+	     (lambda (arg)
+	       (cond
+		((eq arg 'current-buffer)
+		 (sdml-ts-mode-cli-make-arg 'input (buffer-file-name)))
+		(t arg)))
+             args)))
       (cond
        ((null cmd-name)
         (message "couldn't find the sdml cli: %s" cli-name))
-       (t
-        (string-join (append pre-args args) " "))))))
+       (t (string-join (append pre-args args) " "))))))
 
 (defun sdml-ts-mode-cli--make-refresh-cmd (cmd env out err)
   "Return a lambda to refresh the output buffer from a command.
@@ -100,8 +104,9 @@ to add, OUT is the output buffer and ERR the error buffer."
   (lambda ()
     (interactive)
     (setq buffer-read-only nil)
-    (delete-region  (point-min) (point-max))
-    (with-environment-variables (("SDML_PATH" env))
+    (delete-region (point-min) (point-max))
+    (with-environment-variables
+	(("SDML_PATH" env))
       (shell-command cmd out err)
       ;; colorize output
       (ansi-color-apply-on-region (point-min) (point-max))
@@ -117,10 +122,14 @@ to `sdml-cli-default-error-buffer-name'.
 The boolean REFRESH-FN indicates that a refresh function should
 be added to the buffer with a key binding to \"g\"."
   (let ((is-special (null output-buffer-name))
-        (output-buffer-name (or output-buffer-name sdml-ts-mode-cli-default-output-buffer-name))
-        (load-path (concat (or (getenv "SDML_PATH") "")
-                           (string-join sdml-ts-mode-cli-load-path ":"))))
-    (with-environment-variables (("SDML_PATH" load-path))
+	(output-buffer-name
+	 (or output-buffer-name sdml-ts-mode-cli-default-output-buffer-name))
+	(load-path
+	 (concat
+	  (or (getenv "SDML_PATH") "")
+          (string-join sdml-ts-mode-cli-load-path ":"))))
+    (with-environment-variables
+	(("SDML_PATH" load-path))
       (shell-command command
                      output-buffer-name
                      (or error-buffer-name sdml-ts-mode-cli-default-error-buffer-name))
@@ -131,12 +140,13 @@ be added to the buffer with a key binding to \"g\"."
         ;; make read-only
         (special-mode)
         (when refresh-fn
-        ;; install refresh command
-        (use-local-map (copy-keymap special-mode-map))
-        (local-set-key "g" (sdml-ts-mode-cli--make-refresh-cmd command
-                                                            load-path
-                                                            output-buffer-name
-                                                            error-buffer-name)))))))
+          ;; install refresh command
+          (use-local-map (copy-keymap special-mode-map))
+          (local-set-key "g"
+			 (sdml-ts-mode-cli--make-refresh-cmd command
+                                                             load-path
+                                                             output-buffer-name
+                                                             error-buffer-name)))))))
 
 (provide 'sdml-ts-mode-cli)
 

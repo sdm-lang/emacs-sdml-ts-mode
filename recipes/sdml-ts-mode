@@ -1,1 +1,4 @@
-(sdml-ts-mode :repo "sdm-lang/emacs-sdml-ts-mode" :fetcher github)
+(sdml-ts-mode
+ :fetcher github
+ :repo "sdm-lang/emacs-sdml-ts-mode"
+ :files (:defaults "sdml-ts-mode-*.el"))

@@ -77,17 +77,20 @@ put the tag file named `sdml-ts-mode-ctags-output-file-name'.
 If neither of these are present the directory containing FILE-NAME
 will be used as the location for the tag file named
  `sdml-ts-mode-ctags-output-file-name'."
-  (let* ((current-buffer-dir (file-name-directory
-                              (or file-path (buffer-file-name))))
-         (fallback (concat current-buffer-dir
-                           sdml-ts-mode-ctags-output-file-name)))
-  (cond ((featurep 'company-ctags)
-         (let ((found (company-ctags-find-table)))
-           (if found (car found) fallback)))
-        ((featurep 'projectile)
-         (concat (projectile-acquire-root current-buffer-dir)
-                 sdml-ts-mode-ctags-output-file-name))
-        (t fallback))))
+  (let* ((current-buffer-dir
+	  (file-name-directory (or file-path (buffer-file-name))))
+	 (fallback
+	  (concat current-buffer-dir
+                  sdml-ts-mode-ctags-output-file-name)))
+    (cond
+     ((featurep 'company-ctags)
+      (let ((found (company-ctags-find-table)))
+        (if found (car found) fallback)))
+     ((featurep 'projectile)
+      (concat
+       (projectile-acquire-root current-buffer-dir)
+       sdml-ts-mode-ctags-output-file-name))
+     (t fallback))))
 
 (defun sdml-ts-mode-ctags-generate ()
   "Generate a TAGS file for the current SDML project.
@@ -97,7 +100,8 @@ This command executes the Universal Ctags executable specified in
 function `sdml-ts-mode-ctags-tag-file-path'."
   (interactive)
   (let ((tag-file-path (sdml-ts-mode-ctags-tag-file-path)))
-    (shell-command (format "%s -R -e -o %s" sdml-ts-mode-ctags-command tag-file-path))))
+    (shell-command
+     (format "%s -R -e -o %s" sdml-ts-mode-ctags-command tag-file-path))))
 
 
 ;; --------------------------------------------------------------------------

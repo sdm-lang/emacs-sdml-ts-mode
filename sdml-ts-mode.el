@@ -128,8 +128,8 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'rx))
+(eval-when-compile (require 'rx))
+(require 'prog-mode)
 (require 'treesit)
 (require 'treesit-fold)
 (require 'treesit-ispell)
@@ -151,16 +151,30 @@
 ;; Customization
 ;; --------------------------------------------------------------------------
 
-(defgroup sdml nil
+(defgroup sdml-ts nil
   "SDML language support."
   :tag "SDML"
-  :prefix "sdml-ts-mode-"
-  :group 'languages)
+  :prefix "sdml-ts-"
+  :group 'languages
+  :link '(url-link :tag "Repository" "https://github.com/sdm-lang/emacs-sdml-ts-mode")
+  :link '(url-link :tag "SDML Home" "https://github.com/sdm-lang"))
 
 (defcustom sdml-ts-mode-prettify-symbols-alist
-  '(("->" . ?→) ("<-" . ?←) ("forall" . ?∀) ("exists". ?∃) ("in". ?∈) (":=". ?≔)
-    ("and" . ?∧) ("or" . ?∨) ("xor" . ?⊻) ("not" . ?¬) ("implies" . ?⟹) ("iff" . ?⇔)
-    ("complement" . ?∖) ("intersects" . ?∩) ("union" . ?∪))
+  '(("->" . ?→)
+    ("<-" . ?←)
+    ("forall" . ?∀)
+    ("exists". ?∃)
+    ("in". ?∈)
+    (":=". ?≔)
+    ("and" . ?∧)
+    ("or" . ?∨)
+    ("xor" . ?⊻)
+    ("not" . ?¬)
+    ("implies" . ?⟹)
+    ("iff" . ?⇔)
+    ("complement" . ?∖)
+    ("intersects" . ?∩)
+    ("union" . ?∪))
   "An alist of symbol replacements used for `prettify-symbols-alist'."
   :tag "Symbol mapping for prettify"
   :type '(repeat (cons string character))
@@ -169,13 +183,14 @@
 (defcustom sdml-ts-mode-validation-level 'warnings
   "The level of information to provide during validation."
   :tag "Validation level"
-  :type '(choice (const :tag "None" none)
-                 (const :tag "Bugs" bugs)
-                 (const :tag "Errors" errors)
-                 (const :tag "Warnings" warnings)
-                 (const :tag "Notes" notes)
-                 (const :tag "Help" help)
-                 (const :tag "All" all))
+  :type '(choice
+	  (const :tag "None" none)
+	  (const :tag "Bugs" bugs)
+	  (const :tag "Errors" errors)
+	  (const :tag "Warnings" warnings)
+	  (const :tag "Notes" notes)
+	  (const :tag "Help" help)
+	  (const :tag "All" all))
   :group 'sdml)
 
 ;; --------------------------------------------------------------------------
@@ -184,9 +199,17 @@
 
 (defconst sdml-ts-mode-validation-error-regexp
   (rx bol
-      (or (group (or "bug" "error")) (group "warning") (group (or "help" "note")))
-      ?\[ (char "BEWI") (= 4 digit) ?\] ?: (* (char " \t"))
-      (group (+ (not ?\n))) ?\n
+      (or
+       (group (or "bug" "error"))
+       (group "warning")
+       (group (or "help" "note")))
+      ?\[
+      (char "BEWI")
+      (= 4 digit)
+      ?\] ?:
+      (* (char " \t"))
+      (group (+ (not ?\n)))
+      ?\n
       "   ┌─ "
       (group (+ (not ?:)))
       ?:
@@ -200,17 +223,18 @@
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
   (setq-local ansi-color-for-compilation-mode t)
   (add-to-list 'compilation-error-regexp-alist-alist
-               `(sdml ,sdml-ts-mode-validation-error-regexp 5 6 7 (2 . 3)))
+               `(sdml ,sdml-ts-mode-validation-error-regexp 5 6 7
+		      (2 . 3)))
   (add-to-list 'compilation-error-regexp-alist 'sdml))
 
 (defun sdml-ts-mode--exec-validator (file-name)
   "Internal: execute the command-line validator for FILE-NAME."
-  (let ((cmd-line (sdml-ts-mode-cli-make-command
-                   "validate"
-                   (sdml-ts-mode-cli-make-arg 'level sdml-ts-mode-validation-level)
-                   (sdml-ts-mode-cli-make-arg 'input file-name))))
-    (when cmd-line
-      (compile cmd-line))))
+  (let ((cmd-line
+	 (sdml-ts-mode-cli-make-command
+          "validate"
+          (sdml-ts-mode-cli-make-arg 'level sdml-ts-mode-validation-level)
+          (sdml-ts-mode-cli-make-arg 'input file-name))))
+    (when cmd-line (compile cmd-line))))
 
 (defun sdml-ts-mode-validate-file (file-name)
   "Validate FILE-NAME using the `compile' command.
@@ -251,13 +275,15 @@ using the key `q'."
   (interactive nil sdml-ts-mode)
   (cond
    (window-system
-    (let* ((output-file-name (concat (make-temp-file "sdml-ts-mode") ".svg"))
-           (cmd-line (sdml-ts-mode-cli-make-command
-                      "deps"
-                      (sdml-ts-mode-cli-make-arg 'output output-file-name)
-                      (sdml-ts-mode-cli-make-arg 'output-format 'graph)
-                      (sdml-ts-mode-cli-make-arg 'depth 0)
-                      'current-buffer)))
+    (let* ((output-file-name
+	    (concat (make-temp-file "sdml-ts-mode") ".svg"))
+           (cmd-line
+	    (sdml-ts-mode-cli-make-command
+             "deps"
+             (sdml-ts-mode-cli-make-arg 'output output-file-name)
+             (sdml-ts-mode-cli-make-arg 'output-format 'graph)
+             (sdml-ts-mode-cli-make-arg 'depth 0)
+             'current-buffer)))
       (when cmd-line
         (sdml-ts-mode-cli-run-command cmd-line)
         (find-file-other-window output-file-name))))
@@ -273,13 +299,14 @@ of dependencies to display.  The resulting window may be dismissed
 using the key `q', and it's content may be refreshed with the key
 `g'."
   (interactive "nMax depth of tree (0=all): " sdml-ts-mode)
-  (let ((cmd-line (sdml-ts-mode-cli-make-command
-                     "deps"
-                     (sdml-ts-mode-cli-make-arg 'output-format 'tree)
-                     (sdml-ts-mode-cli-make-arg 'depth depth)
-                     'current-buffer)))
-      (when cmd-line
-        (sdml-ts-mode-cli-run-command cmd-line "*SDML Dependencies*" nil t))))
+  (let ((cmd-line
+	 (sdml-ts-mode-cli-make-command
+          "deps"
+          (sdml-ts-mode-cli-make-arg 'output-format 'tree)
+          (sdml-ts-mode-cli-make-arg 'depth depth)
+          'current-buffer)))
+    (when cmd-line
+      (sdml-ts-mode-cli-run-command cmd-line "*SDML Dependencies*" nil t))))
 
 ;; --------------------------------------------------------------------------
 ;; Commands ❱ Placeholders
@@ -289,20 +316,22 @@ using the key `q', and it's content may be refreshed with the key
   "Generate standard documentation for module in current buffer."
   (interactive nil sdml-ts-mode)
   (let* ((inp-file (buffer-file-name))
-         (out-file (if (null inp-file) "-"
-                     (concat (file-name-sans-extension inp-file) ".org")))
-         (out-buffer (if (null inp-file) "*SDML Documentation*" nil)))
-    (let ((cmd-line (sdml-ts-mode-cli-make-command
-                     "doc"
-                     (sdml-ts-mode-cli-make-arg 'output-format 'org-mode)
-                     (sdml-ts-mode-cli-make-arg 'output out-file)
-                     'current-buffer)))
+	 (out-file
+	  (if (null inp-file)
+	      "-"
+            (concat (file-name-sans-extension inp-file) ".org")))
+	 (out-buffer (if (null inp-file) "*SDML Documentation*" nil)))
+    (let ((cmd-line
+	   (sdml-ts-mode-cli-make-command
+            "doc"
+            (sdml-ts-mode-cli-make-arg 'output-format 'org-mode)
+            (sdml-ts-mode-cli-make-arg 'output out-file)
+            'current-buffer)))
       (when cmd-line
         (sdml-ts-mode-cli-run-command cmd-line out-buffer nil t)
         (cond
          ((not (null out-buffer))
-          (with-current-buffer out-buffer
-            (org-mode)))
+          (with-current-buffer out-buffer (org-mode)))
          ((not (eq out-file "-"))
           (find-file out-file)))))))
 
@@ -335,20 +364,23 @@ using the key `q', and it's content may be refreshed with the key
   "Generate Scheme representation of the current buffer."
   (interactive nil sdml-ts-mode)
   (let* ((inp-file (buffer-file-name))
-         (out-file (if (null inp-file) "-"
-                     (concat (file-name-sans-extension inp-file) ".scm")))
-         (out-buffer (if (null inp-file) "*SDML Parse-tree Scheme*" nil)))
-    (let ((cmd-line (sdml-ts-mode-cli-make-command
-                     "convert"
-                     (sdml-ts-mode-cli-make-arg 'output-format 's-expr)
-                     (sdml-ts-mode-cli-make-arg 'output out-file)
-                     'current-buffer)))
+	 (out-file
+	  (if (null inp-file)
+	      "-"
+            (concat (file-name-sans-extension inp-file) ".scm")))
+	 (out-buffer
+	  (if (null inp-file) "*SDML Parse-tree Scheme*" nil)))
+    (let ((cmd-line
+	   (sdml-ts-mode-cli-make-command
+            "convert"
+            (sdml-ts-mode-cli-make-arg 'output-format 's-expr)
+            (sdml-ts-mode-cli-make-arg 'output out-file)
+            'current-buffer)))
       (when cmd-line
         (sdml-ts-mode-cli-run-command cmd-line out-buffer nil t)
         (cond
          ((and (not (null out-buffer)) (featurep 'scheme-mode))
-          (with-current-buffer out-buffer
-            (scheme-mode)))
+          (with-current-buffer out-buffer (scheme-mode)))
          ((not (eq out-file "-"))
           (find-file out-file)))))))
 
@@ -356,20 +388,22 @@ using the key `q', and it's content may be refreshed with the key
   "Generate JSON representation of current buffer."
   (interactive nil sdml-ts-mode)
   (let* ((inp-file (buffer-file-name))
-         (out-file (if (null inp-file) "-"
-                     (concat (file-name-sans-extension inp-file) ".json")))
-         (out-buffer (if (null inp-file) "*SDML Parse-tree JSON*" nil)))
-    (let ((cmd-line (sdml-ts-mode-cli-make-command
-                     "convert"
-                     (sdml-ts-mode-cli-make-arg 'output-format 'json-pretty)
-                     (sdml-ts-mode-cli-make-arg 'output out-file)
-                     'current-buffer)))
+	 (out-file
+	  (if (null inp-file)
+	      "-"
+            (concat (file-name-sans-extension inp-file) ".json")))
+	 (out-buffer (if (null inp-file) "*SDML Parse-tree JSON*" nil)))
+    (let ((cmd-line
+	   (sdml-ts-mode-cli-make-command
+            "convert"
+            (sdml-ts-mode-cli-make-arg 'output-format 'json-pretty)
+            (sdml-ts-mode-cli-make-arg 'output out-file)
+            'current-buffer)))
       (when cmd-line
         (sdml-ts-mode-cli-run-command cmd-line out-buffer nil t)
         (cond
          ((and (not (null out-buffer)) (featurep 'json-mode))
-          (with-current-buffer out-buffer
-            (json-mode)))
+          (with-current-buffer out-buffer (json-mode)))
          ((not (eq out-file "-"))
           (find-file out-file)))))))
 
@@ -393,18 +427,28 @@ using the key `q', and it's content may be refreshed with the key
   :parent prog-mode-map
 
   ;; SDML CLI tooling...
-  (sdml-ts-mode--prefix-key "v") #'sdml-ts-mode-validate-current-buffer
-  (sdml-ts-mode--prefix-key "C-v") #'sdml-ts-mode-validate-current-buffer
-  (sdml-ts-mode--prefix-key "d t") #'sdml-ts-mode-current-buffer-dependency-tree
-  (sdml-ts-mode--prefix-key "d g") #'sdml-ts-mode-current-buffer-dependency-graph
+  (sdml-ts-mode--prefix-key "v")
+  #'sdml-ts-mode-validate-current-buffer
+  (sdml-ts-mode--prefix-key "C-v")
+  #'sdml-ts-mode-validate-current-buffer
+  (sdml-ts-mode--prefix-key "d t")
+  #'sdml-ts-mode-current-buffer-dependency-tree
+  (sdml-ts-mode--prefix-key "d g")
+  #'sdml-ts-mode-current-buffer-dependency-graph
 
   ;; Code folding
-  (sdml-ts-mode--prefix-key "-") #'treesit-fold-close
-  (sdml-ts-mode--prefix-key "+") #'treesit-fold-open
-  (sdml-ts-mode--prefix-key "*") #'treesit-fold-open-recursively
-  (sdml-ts-mode--prefix-key "=") #'treesit-fold-toggle
-  (sdml-ts-mode--prefix-key "C--") #'treesit-fold-close-all
-  (sdml-ts-mode--prefix-key "C-+") #'treesit-fold-open-all)
+  (sdml-ts-mode--prefix-key "-")
+  #'treesit-fold-close
+  (sdml-ts-mode--prefix-key "+")
+  #'treesit-fold-open
+  (sdml-ts-mode--prefix-key "*")
+  #'treesit-fold-open-recursively
+  (sdml-ts-mode--prefix-key "=")
+  #'treesit-fold-toggle
+  (sdml-ts-mode--prefix-key "C--")
+  #'treesit-fold-close-all
+  (sdml-ts-mode--prefix-key "C-+")
+  #'treesit-fold-open-all)
 
 ;; --------------------------------------------------------------------------
 ;; Syntax Table
@@ -420,14 +464,14 @@ using the key `q', and it's content may be refreshed with the key
     (modify-syntax-entry ?_ "_   " table)
     (modify-syntax-entry ?@ "_   " table)
     ;; Operators (as punctuation)
-    (mapc (lambda (c)
-            (modify-syntax-entry c ".   " table))
-          '(?≔ ?= ?≠ ?< ?> ?≤ ?≥
-               ?+ ?- ?/ ?* ?× ?÷ ?%
-               ?∧ ?∨ ?⊻ ?¬?⟹ ?⇔ ?∃ ?∄ ?∀
-               ?∋ ?∌ ?∩ ?∪ ?∖ ?⊂ ?⊆ ?⊃ ?⊇ ?⨉
-               ?→ ?← ?∘
-               ?⊤ ?⊥ ?∅))
+    (mapc
+     (lambda (c) (modify-syntax-entry c ".   " table))
+     '(?≔ ?= ?≠ ?< ?> ?≤ ?≥
+          ?+ ?- ?/ ?* ?× ?÷ ?%
+          ?∧ ?∨ ?⊻ ?¬?⟹ ?⇔ ?∃ ?∄ ?∀
+          ?∋ ?∌ ?∩ ?∪ ?∖ ?⊂ ?⊆ ?⊃ ?⊇ ?⨉
+          ?→ ?← ?∘
+          ?⊤ ?⊥ ?∅))
     ;; Non-operator punctuation
     (modify-syntax-entry ?# ".   " table)
     (modify-syntax-entry ?, ".   " table)
@@ -440,7 +484,7 @@ using the key `q', and it's content may be refreshed with the key
     ;; Parenthesis
     (modify-syntax-entry ?\( "()  " table)
     (modify-syntax-entry ?\) ")(  " table)
-    (modify-syntax-entry ?\[ "(]" table)
+    (modify-syntax-entry ?\["(]" table)
     (modify-syntax-entry ?\] ")[" table)
     (modify-syntax-entry ?\{ "(}" table)
     (modify-syntax-entry ?\} "){}" table)
@@ -451,16 +495,17 @@ using the key `q', and it's content may be refreshed with the key
 ;; --------------------------------------------------------------------------
 
 (defconst sdml-ts-mode--definition-node-names
-  (regexp-opt '("datatype_def"
-                "entity_def"
-                "enum_def"
-                "event_def"
-                "metric_def"
-                "metric_group_def"
-                "rdf_def"
-                "structure_def"
-                "type_class_def"
-                "union_def")))
+  (regexp-opt
+   '("datatype_def"
+     "entity_def"
+     "enum_def"
+     "event_def"
+     "metric_def"
+     "metric_group_def"
+     "rdf_def"
+     "structure_def"
+     "type_class_def"
+     "union_def")))
 
 (defun sdml-ts-mode--defun-name (node)
   "For any SDML definition in NODE, return it's name as a string.
@@ -468,7 +513,8 @@ Return nil if there is no name or if NODE is not a defun node."
   (when (string-match sdml-ts-mode--definition-node-names
                       (treesit-node-type node))
     (treesit-node-text
-     (treesit-node-child-by-field-name node "name") t)))
+     (treesit-node-child-by-field-name node "name")
+     t)))
 
 ;; --------------------------------------------------------------------------
 ;; Mode Definition
@@ -534,7 +580,8 @@ This major mode will, by default, enable the following minor modes:
 
   (unless (assoc 'sdml treesit-language-source-alist)
     (add-to-list 'treesit-language-source-alist
-                 '(sdml . ("https://github.com/sdm-lang/tree-sitter-sdml"))))
+                 '(sdml .
+			("https://github.com/sdm-lang/tree-sitter-sdml"))))
 
   (add-to-list 'auto-mode-alist '("\\.sdml?\\'" . sdml-ts-mode)))
 
