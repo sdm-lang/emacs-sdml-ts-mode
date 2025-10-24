@@ -3,7 +3,7 @@
 ;; Author: Simon Johnston <johnstonskj@gmail.com>
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "29.1") (treesit-fold "0.2.1") (treesit-ispell "0.1.0"))
-;; URL: https://github.com/sdm-lang/emacs-sdml-mode
+;; URL: https://github.com/sdm-lang/emacs-sdml-ts-mode
 ;; Keywords: languages tools
 
 ;;; License:
@@ -137,7 +137,6 @@
 (require 'compile)
 
 (declare-function json-mode "json")
-
 
 (makunbound 'sdml-ts-mode--debug-mode)
 (defvar sdml-ts-mode--debug-mode t)

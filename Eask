@@ -1,7 +1,7 @@
 ;; -*- mode: eask; lexical-binding: t -*-
 
 (package "sdml-ts-mode"
-         "0.2.1"
+         "0.1.0"
          "Major mode for SDML")
 
 (website-url "https://github.com/sdm-lang/emacs-sdml-ts-mode")
@@ -15,6 +15,8 @@
 (source "gnu")
 (source "melpa")
 
-(depends-on "emacs" "26.1")
-(depends-on "tree-sitter")
-(depends-on "tree-sitter-indent")
+(depends-on "emacs" "29.1")
+(depends-on "treesit-fold"
+    :fetcher 'github
+    :repo "emacs-tree-sitter/treesit-fold")
+(depends-on "treesit-ispell")
