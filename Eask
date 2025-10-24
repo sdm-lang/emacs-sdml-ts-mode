@@ -8,7 +8,7 @@
 (keywords "languages" "tools")
 
 (package-file "sdml-ts-mode.el")
-(files "sdml-mode-*.el")
+(files "sdml-ts-mode-*.el")
 
 (script "test" "echo \"Error: no test specified\" && exit 1")
 

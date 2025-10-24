@@ -11,6 +11,8 @@
 
 (require 'treesit)
 
+(require 'sdml-ts-mode--dev)
+
 ;; --------------------------------------------------------------------------
 ;; Customization
 ;; --------------------------------------------------------------------------
@@ -49,13 +51,10 @@
                  "type_class_body"
                  "union_body")))
 
-(when sdml-ts-mode--debug-mode
-  (message "Cleaning up sdml-ts-mode--indent-rules")
-  (makunbound 'sdml-ts-mode-indent--rules))
+(sdml-ts-mode--dev-makunbound 'sdml-ts-mode-indent--rules)
 
 (defvar sdml-ts-mode-indent--rules
-  (let ((offset sdml-ts-mode-indent-offset)
-        (no-offset 0))
+  (let ((offset sdml-ts-mode-indent-offset))
     `(;; These are simply line-up rules, for the most part they're simple
       ;; except for weird Emacs regex escaping.
 
@@ -172,7 +171,7 @@
 (defun sdml-ts-mode-indent-setup ()
   "Setup `treesit'-based indentation."
 
-  (when sdml-ts-mode--debug-mode
+  (when sdml-ts-mode--dev-p
       (message "%s" sdml-ts-mode-indent--rules)
       (setq-local treesit--indent-verbose t))
 

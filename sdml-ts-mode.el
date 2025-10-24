@@ -136,19 +136,16 @@
 (require 'ansi-color)
 (require 'compile)
 
-(declare-function json-mode "json")
-
-(makunbound 'sdml-ts-mode--debug-mode)
-(defvar sdml-ts-mode--debug-mode t)
-
-;; (defvar sdml-ts-mode--debug-mode
-;;   (let ((debug-mode (getenv "DEBUG_SDML_TS_MODE")))
-;;     (and debug-mode (string-equal debug-mode "1"))))
-
 (require 'sdml-ts-mode-abbrev)
+(require 'sdml-ts-mode-cli)
+(require 'sdml-ts-mode-ctags)
+(require 'sdml-ts-mode-fold)
+(require 'sdml-ts-mode-font-lock)
+(require 'sdml-ts-mode-imenu)
+(require 'sdml-ts-mode-indent)
+(require 'sdml-ts-mode--dev)
 
-;(require 'sdml-mode-cli)
-;(require 'sdml-mode-ctags)
+(declare-function json-mode "json")
 
 ;; --------------------------------------------------------------------------
 ;; Customization
@@ -239,11 +236,9 @@ usual."
   (interactive nil sdml-ts-mode)
   (sdml-ts-mode--exec-validator (buffer-file-name)))
 
-
 ;; --------------------------------------------------------------------------
 ;; Commands ❱ Dependencies
 ;; --------------------------------------------------------------------------
-
 
 (defun sdml-ts-mode-current-buffer-dependency-graph ()
   "Show full dependency graph in SVG of the current buffer.
@@ -285,7 +280,6 @@ using the key `q', and it's content may be refreshed with the key
                      'current-buffer)))
       (when cmd-line
         (sdml-ts-mode-cli-run-command cmd-line "*SDML Dependencies*" nil t))))
-
 
 ;; --------------------------------------------------------------------------
 ;; Commands ❱ Placeholders
@@ -426,14 +420,14 @@ using the key `q', and it's content may be refreshed with the key
     (modify-syntax-entry ?_ "_   " table)
     (modify-syntax-entry ?@ "_   " table)
     ;; Operators (as punctuation)
-    (mapcar (lambda (c)
-              (modify-syntax-entry c ".   " table))
-            '(?≔ ?= ?≠ ?< ?> ?≤ ?≥
-                 ?+ ?- ?/ ?* ?× ?÷ ?%
-                 ?∧ ?∨ ?⊻ ?¬?⟹ ?⇔ ?∃ ?∄ ?∀
-                 ?∋ ?∌ ?∩ ?∪ ?∖ ?⊂ ?⊆ ?⊃ ?⊇ ?⨉
-                 ?→ ?← ?∘
-                 ?⊤ ?⊥ ?∅))
+    (mapc (lambda (c)
+            (modify-syntax-entry c ".   " table))
+          '(?≔ ?= ?≠ ?< ?> ?≤ ?≥
+               ?+ ?- ?/ ?* ?× ?÷ ?%
+               ?∧ ?∨ ?⊻ ?¬?⟹ ?⇔ ?∃ ?∄ ?∀
+               ?∋ ?∌ ?∩ ?∪ ?∖ ?⊂ ?⊆ ?⊃ ?⊇ ?⨉
+               ?→ ?← ?∘
+               ?⊤ ?⊥ ?∅))
     ;; Non-operator punctuation
     (modify-syntax-entry ?# ".   " table)
     (modify-syntax-entry ?, ".   " table)
@@ -522,19 +516,15 @@ This major mode will, by default, enable the following minor modes:
     (message "Setting up tree-sitter for SDML")
     (treesit-parser-create 'sdml)
 
-    (require 'sdml-ts-mode-imenu)
     (sdml-ts-mode-imenu-setup)
 
     (setq-local treesit-defun-type-regexp sdml-ts-mode--definition-node-names)
     (setq-local treesit-defun-name-function #'sdml-ts-mode--defun-name)
 
-    (require 'sdml-ts-mode-font-lock)
     (sdml-ts-mode-font-lock-setup)
 
-    (require 'sdml-ts-mode-indent)
     (sdml-ts-mode-indent-setup)
 
-    (require 'sdml-ts-mode-fold)
     (sdml-ts-mode-fold-setup)
 
     (treesit-major-mode-setup)))

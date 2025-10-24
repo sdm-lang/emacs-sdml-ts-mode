@@ -14,6 +14,7 @@
 (require 'treesit)
 
 (require 'sdml-ts-mode-query)
+(require 'sdml-ts-mode--dev)
 
 ;; --------------------------------------------------------------------------
 ;; Font Lock ❱ Faces
@@ -278,8 +279,7 @@
 ;; Tree-Sitter ❱ Font Lock ❱ Rules
 ;; --------------------------------------------------------------------------
 
-(when sdml-ts-mode--debug-mode
-  (makunbound 'sdml-ts-mode-font-lock--settings))
+(sdml-ts-mode--dev-makunbound 'sdml-ts-mode-font-lock--settings)
 
 (defvar sdml-ts-mode-font-lock--settings
   (treesit-font-lock-rules
@@ -572,8 +572,7 @@
 ;; Tree-Sitter ❱ Font Lock ❱ Features
 ;; --------------------------------------------------------------------------
 
-(when sdml-ts-mode--debug-mode
-  (makunbound 'sdml-ts-mode-font-lock--feature-list))
+(sdml-ts-mode--dev-makunbound 'sdml-ts-mode-font-lock--feature-list)
 
 (defvar sdml-ts-mode-font-lock--feature-list
   '(;; Level-1:

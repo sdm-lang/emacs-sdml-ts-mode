@@ -11,13 +11,13 @@
 
 (require 'treesit)
 
+(require 'sdml-ts-mode--dev)
+
 ;; --------------------------------------------------------------------------
 ;; Tree-Sitter ❱ iMenu ❱ Rules
 ;; --------------------------------------------------------------------------
 
-(when sdml-ts-mode--debug-mode
-  ;; maybe: (imenu-flush-cache)
-  (makunbound 'sdml-ts-mode-imenu--rules))
+(sdml-ts-mode--dev-makunbound 'sdml-ts-mode-imenu--rules)
 
 (defvar sdml-ts-mode-imenu--rules
   '(("Module" "\\`module_def``'" nil nil)

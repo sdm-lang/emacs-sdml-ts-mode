@@ -77,13 +77,13 @@
     "yearMonthDuration"))
 
 (defconst sdml-ts-mode-query--owl-datatypes
-  ("rational" "real"))
+  '("rational" "real"))
 
 (defconst sdml-ts-mode-query--owl-classes
-  ("Nothing" "Thing"))
+  '("Nothing" "Thing"))
 
 (defconst sdml-ts-mode-query--sdml-datatypes
-  ("binary" "iri"))
+  '("binary" "iri"))
 
 (defconst sdml-ts-mode-query--builtin-types
   '(builtin_types))

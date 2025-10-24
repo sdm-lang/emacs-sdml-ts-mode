@@ -13,6 +13,8 @@
 (require 'treesit-fold)
 (require 'treesit-fold-indicators)
 
+(require 'sdml-ts-mode--dev)
+
 ;; --------------------------------------------------------------------------
 ;; Customization
 ;; --------------------------------------------------------------------------
@@ -59,8 +61,7 @@ It is safe to ignore OFFSET."
 It is safe to ignore OFFSET."
   (treesit-fold-range-line-comment node offset ";"))
 
-(when sdml-ts-mode--debug-mode
-  (makunbound 'sdml-ts-mode--fold-rule-set))
+(sdml-ts-mode--dev-makunbound 'sdml-ts-mode--fold-rule-set)
 
 (defvar sdml-ts-mode-fold--rule-set
   '((line_comment . sdml-ts-mode--fold-line-comment)
@@ -105,7 +106,7 @@ It is safe to ignore OFFSET."
 (defun sdml-ts-mode-fold-setup ()
   "Setup `treesit-fold-mode' and add mode hooks."
   (message "Setting up tree-sitter/fold for SDML")
-  (when sdml-ts-mode--debug-mode
+  (when sdml-ts-mode--dev-p
     (setq treesit-fold-range-alist
           (assq-delete-all 'sdml-ts-mode treesit-fold-range-alist)))
 

@@ -11,6 +11,8 @@
 
 (require 'skeleton)
 
+(require 'sdml-ts-mode--dev)
+
 ;; --------------------------------------------------------------------------
 ;; Abbrev ❱ Skeletons
 ;; --------------------------------------------------------------------------
@@ -135,8 +137,7 @@
 ;; Abbrev ❱ Table
 ;; --------------------------------------------------------------------------
 
-(when sdml-ts-mode--debug-mode
-  (makunbound 'sdml-ts-mode-abbrev-table))
+(sdml-ts-mode--dev-makunbound 'sdml-ts-mode-abbrev-table)
 
 ;; Note you still need a replacement string "" when using
 ;;      skeletons or the original text isn't removed.
