@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# -*- mode: sh; eval: (sh-set-shell "bash") -*-
+
+declare -a EASK_VERBOSE=(---verbose 5 --debug)
+declare -a EASK_LINTERS=(checkdoc declare elint elisp-lint indent keywords license package regexps)
+
+function run_eask {
+    local command=$1
+    shift
+    if [[ "$1" == "relax" ]]; then
+        relax=1
+        shift
+    else
+        relax=0
+    fi
+
+    declare -a eask_args=("$@" "${EASK_VERBOSE[@]}")
+
+    if ! eask "${command}" "${eask_args[@]}"; then
+        if [[ relax -eq 0 ]]; then
+            echo >&2 "Eask command failed. command line: ${command} ${eask_args[*]}"
+            exit 1
+        else
+            echo "Eask command failed, ignoring for now. command line: ${command} ${eask_args[*]}"
+        fi
+    fi
+}
+
+for linter in "${EASK_LINTERS[@]}"; do
+    run_eask lint "${linter}"
+done
+
+run_eask format elfmt
+run_eask analyze
+run_eask outdated
+run_eask package
+run_eask install relax
+run_eask compile
+run_eask docs
+
+run_eask test relax melpazoid

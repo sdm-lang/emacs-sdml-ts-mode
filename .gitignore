@@ -53,7 +53,16 @@ flycheck_*.el
 ### Eask ###
 
 # Local package cache
-.eask/
+/.eask/
+
+# Elsa package cache
+/.elsa/
 
 # Distribution build directory
-dist/
+/dist/
+
+# Generated docs directory
+/docs/
+
+# Generated files
+/*sdml-ts-mode*-autoloads.el

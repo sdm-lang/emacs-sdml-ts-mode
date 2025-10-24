@@ -2,10 +2,10 @@ name: Emacs Eask
 
 on:
   push:
-    paths-ignore: ["LICENSE*", "**.md", "**.org"]
+    paths-ignore: ["LICENSE*", "**.md", "**.org", ".mise.toml"]
 
   pull_request:
-    paths-ignore: ["LICENSE*", "**.md", "**.org"]
+    paths-ignore: ["LICENSE*", "**.md", "**.org", ".mise.toml"]
 
 jobs:
   test:
@@ -29,8 +29,17 @@ jobs:
         with:
           version: "snapshot"
 
-      - name: Run tests
-        run: |
-          eask package
-          eask install
-          eask compile
+      - name: Analyze package
+        run: eask analyze
+
+      - name: Create package
+        run: eask package
+
+      - name: Install all packages
+        run: eask install
+
+      - name: Compile package
+        run: eask compile
+
+      - name: Generate package docs
+        run: eask docs
