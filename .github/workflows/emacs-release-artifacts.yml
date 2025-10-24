@@ -44,7 +44,7 @@ jobs:
                          ${{ env.PACKAGE_NAME }}-${{ github.ref_name }}-docs
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Release ${{ github.ref_name }} artifacts
           path: dist/*.tar.gz
