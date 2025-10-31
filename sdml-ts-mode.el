@@ -448,8 +448,8 @@ using the key `q', and it's content may be refreshed with the key
   ;; SDML CLI tooling...
   (sdml-ts-mode--prefix-key "v")
   #'sdml-ts-mode-validate-current-buffer
-  (sdml-ts-mode--prefix-key "C-v")
-  #'sdml-ts-mode-validate-current-buffer
+  (sdml-ts-mode--prefix-key "C-f v")
+  #'sdml-ts-mode-validate-file
   (sdml-ts-mode--prefix-key "d t")
   #'sdml-ts-mode-current-buffer-dependency-tree
   (sdml-ts-mode--prefix-key "d g")
