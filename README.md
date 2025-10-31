@@ -6,7 +6,8 @@ This package provides an Emacs tree-sitter based major mode for SDML - the
 [Simple Domain Modeling Language](https://github.com/sdm-lang/tree-sitter-sdml).
 
 [![License-Apache_2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Eask Workflow](https://github.com/sdm-lang/emacs-sdml-ts-mode/actions/workflows/emacs-eask.yml/badge.svg)](https://github.com/sdm-lang/emacs-sdml-ts-mode/actions/workflows/emacs-eask.yml)
+[![License-MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Eask> Workflow](<https://github.com/sdm-lang/emacs-sdml-ts-mode/actions/workflows/emacs-eask.yml/badge.svg>)](<https://github.com/sdm-lang/emacs-sdml-ts-mode/actions/workflows/emacs-eask.yml>)
 [![MELPA](https://melpa.org/packages/sdml-ts-mode-badge.svg)](https://melpa.org/#/sdml-ts-mode)
 [![Stargazer Count](https://img.shields.io/github/stars/sdm-lang/emacs-sdml-ts-mode.svg)](https://github.com/sdm-lang/emacs-sdml-ts-mode/stargazers)
 
